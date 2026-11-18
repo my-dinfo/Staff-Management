@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: staff-management-app
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: waitress-serve --host 0.0.0.0 --port $PORT --threads 8 app:app
+    healthCheckPath: /login
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: STAFF_DB_PATH
+        value: /var/data/staff.db
+      - key: STAFF_BACKUP_DIR
+        value: /var/data/backups
+    disk:
+      name: staff-data
+      mountPath: /var/data
+      sizeGB: 1
